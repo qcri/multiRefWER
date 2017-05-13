@@ -1,0 +1,21 @@
+Calculate the inter annotation dis-agreemnet:
+data/text_noverlap.Alaa.common.norm
+%WER 17.51 [ 5792 / 33087, 976 ins, 1080 del, 3736 sub ]
+%WER 14.30 [ 4730 / 33087, 622 ins, 772 del, 3336 sub ]
+%WER 11.85 [ 3921 / 33087, 627 ins, 528 del, 2766 sub ]
+###
+data/text_noverlap.Ali.common.norm
+%WER 17.56 [ 5792 / 32983, 1078 ins, 974 del, 3740 sub ]
+%WER 15.08 [ 4975 / 32983, 808 ins, 854 del, 3313 sub ]
+%WER 16.47 [ 5431 / 32983, 970 ins, 767 del, 3694 sub ]
+###
+data/text_noverlap.Mohamed.common.norm
+%WER 14.36 [ 4730 / 32937, 771 ins, 621 del, 3338 sub ]
+%WER 15.10 [ 4975 / 32937, 850 ins, 804 del, 3321 sub ]
+%WER 7.79 [ 2565 / 32937, 424 ins, 175 del, 1966 sub ]
+###
+data/text_noverlap.Omar.common.norm
+%WER 11.82 [ 3921 / 33186, 529 ins, 628 del, 2764 sub ]
+%WER 16.37 [ 5431 / 33186, 765 ins, 968 del, 3698 sub ]
+%WER 7.73 [ 2565 / 33186, 177 ins, 426 del, 1962 sub ]
+###

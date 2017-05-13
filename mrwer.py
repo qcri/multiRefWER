@@ -26,24 +26,39 @@ def werf(r, h):
  
     i,d,s,c,aligned_r, aligned_h, operations = align(r, h, bt)
     return i,d,s,c,len(r),len(h),aligned_r, aligned_h, operations
+
+
+def load_file_dict (trans_file):
+    # we need to handle files with no transcriptions
+    dict_map={}
+    with codecs.open(trans_file,'r',encoding='utf-8') as h:
+        for line in h:
+            if len(line.rstrip().split(None, 1)) > 1:
+                (key, val) = line.rstrip().split(None, 1)
+                dict_map[key] = val
+            else: dict_map[line.rstrip()] = ""
+    return dict_map
+
     
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Multi refernce evaluation for ASR against one reference or more.')
+    parser = argparse.ArgumentParser(description='Multi reference  evaluation for ASR against one reference or more.')
     parser.add_argument('ref', help='one or more reference transcription',nargs='+')
-    parser.add_argument('hyp', help='ASR hypothesis transcription(must be last argumnet)')
+    parser.add_argument('hyp', help='ASR hypothesis transcription (must be last argument)')
     parser.add_argument('-e', '--show-errors',help='Show error per sentence', action='store_true',default=False)
-    parser.add_argument("-ma","--show-multiple-alignment",help='Show multi-refernce alignmnet for each sentence',action="store_true",default=False)
-    parser.add_argument("-a","--show-alignment",help='Show alignmnet for each sentence',action="store_true", default=False)
+    parser.add_argument("-ma","--show-multiple-alignment",help='Show multi-reference alignment for each sentence',action="store_true",default=False)
+    parser.add_argument("-a","--show-alignment",help='Show alignment for each sentence',action="store_true", default=False)
     
     
     args = parser.parse_args()
     nref=len(args.ref)
     
+    load_file_dict (args.hyp)
     
     #load the recognition file 
-    hyp_dict={}
-    with codecs.open(args.hyp,'r',encoding='utf-8') as h:
-        hyp_dict = dict(x.rstrip().split(None, 1) for x in h)
+    hyp_dict = load_file_dict (args.hyp)
+    
+    #with codecs.open(args.hyp,'r',encoding='utf-8') as h:
+    #    hyp_dict = dict(x.rstrip().split(None, 1) for x in h)
 
     
     #load all the reference files
@@ -53,13 +68,12 @@ if __name__ == "__main__":
     
     # WER here
     for idx, ref_file in enumerate(args.ref):
-        ref_dict[idx]={}
-        with codecs.open(ref_file,'r',encoding='utf-8') as r:
-            ref_dict[idx]=dict(x.rstrip().split(None, 1) for x in r)
+        ref_dict[idx]=load_file_dict(ref_file)
+        
         #make sure that all files has the same ids
-        if not (ref_dict[idx].keys() == hyp_dict.keys()):
-            print "Files:", ref_file, args.hyp, "have differnt keys."
-            #sys.exit (1)
+        if not (sorted(ref_dict[idx].keys()) == sorted(hyp_dict.keys())):
+            print "WARNING Files:", ref_file, args.hyp, "have differnt ids."
+            
         i=d=s=c=e=i_t=d_t=s_t=c_t=e_t=wer=wer_t=wc=wc_t=hc=hc_t=0
         align_ref[idx]={}
         
@@ -68,7 +82,9 @@ if __name__ == "__main__":
         # We calculate the WER per refernce file 
         for key in ref_dict[idx]:
             results_details['file_'+str(idx)]['sent_'+key]={}
-            i,d,s,c,wc,hc,results_details['file_'+str(idx)]['sent_'+key]['aligned_r'], results_details['file_'+str(idx)]['sent_'+key]['aligned_h'], results_details['file_'+str(idx)]['sent_'+key]['operations']=werf(ref_dict[idx][key].split(),hyp_dict[key].split())
+            i,d,s,c,wc,hc,results_details['file_'+str(idx)]['sent_'+key]['aligned_r'], \
+            results_details['file_'+str(idx)]['sent_'+key]['aligned_h'], \
+            results_details['file_'+str(idx)]['sent_'+key]['operations'] = werf(ref_dict[idx][key].split(),hyp_dict[key].split())
             err=i+d+s
             wer=err/wc*100
             i_t+=i
@@ -83,19 +99,16 @@ if __name__ == "__main__":
     
         err=i_t+d_t+s_t
         wer=err/wc_t*100
-        wer='%%Overall WER%d:%.2f [%d / %d , %d ins, %d del, %s sub]' % (idx,wer,err,wc_t,i_t,d_t,s_t)
+        wer='%%Overall WER:%.2f [%d / %d , %d ins, %d del, %s sub]' % (wer,err,wc_t,i_t,d_t,s_t)
         results_details['file_'+str(idx)]['wer']=wer
         
         
-        
-        
-    
     # MR-WER here
     i=d=s=c=di=mrwer=i_t=d_t=s_t=c_t=di_t=mrwer_t=0
     # Here, we calculate MR-WER per senetnce across all the available references:
     for sentence_id in hyp_dict.keys():
         results_details['sent_'+sentence_id]={}
-        i,d,s,c,di,align_compact,align_details= merge_align(results_details,sentence_id,nref)        
+        i,d,s,c,di,align_compact,align_details = merge_align(results_details,sentence_id,nref)        
         i_t+=i
         d_t+=d
         s_t+=s

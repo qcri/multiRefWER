@@ -1,0 +1,11 @@
+Overall results:
+File: data/text_noverlap.Ali.common.norm
+%Overall WER:62.61 [20652 / 32983 , 488 ins, 8598 del, 11566 sub]
+File: data/text_noverlap.Omar.common.norm
+%Overall WER:61.79 [20504 / 33186 , 442 ins, 8755 del, 11307 sub]
+File: data/text_noverlap.Alaa.common.norm
+%Overall WER:62.36 [20634 / 33087 , 503 ins, 8717 del, 11414 sub]
+File: data/text_noverlap.Mohamed.common.norm
+%Overall WER:61.73 [20333 / 32937 , 443 ins, 8507 del, 11383 sub]
+
+%Overall MR-WER:56.66 [314 ins, 5946 del, 11025 sub, 13534 cor]

@@ -131,7 +131,7 @@ if __name__ == "__main__":
                 print 'File:', args.ref[ref_id]
                 print results_details['file_'+str(ref_id)]['sent_'+sentence_id]['wer']
                 if args.show_alignment:
-                    print 'Reco: ',' '.join(results_details['file_'+str(ref_id)]['sent_'+sentence_id]['aligned_r'])
+                    print 'Ref: ',' '.join(results_details['file_'+str(ref_id)]['sent_'+sentence_id]['aligned_r'])
                     print 'Hyp:  ',' '.join(results_details['file_'+str(ref_id)]['sent_'+sentence_id]['aligned_h'])
                     print 'Err:  ',' '.join(results_details['file_'+str(ref_id)]['sent_'+sentence_id]['operations'])
                 print ''

@@ -65,6 +65,8 @@ if __name__ == "__main__":
     ref_dict={}
     align_ref={}
     results_details={}
+    total_wer=0
+
     
     # WER here
     for idx, ref_file in enumerate(args.ref):
@@ -100,6 +102,7 @@ if __name__ == "__main__":
         err=i_t+d_t+s_t
         wer=err/wc_t*100
         wer='%%Overall WER:%.2f [%d / %d , %d ins, %d del, %s sub]' % (wer,err,wc_t,i_t,d_t,s_t)
+        total_wer+=(err/wc_t)
         results_details['file_'+str(idx)]['wer']=wer
         
         
@@ -146,6 +149,8 @@ if __name__ == "__main__":
         print results_details['file_'+str(ref_id)]['wer']
     
     print '\n', results_details['mrwer']
+    print '%%Overall AV-WER:%.2f' % (total_wer/nref*100)
+    
 
     
     
